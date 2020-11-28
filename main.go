@@ -105,17 +105,23 @@ func parseCSV(input string) (*[]question, error) {
 }
 
 func askQuestions(questions *[]question, pScore *score) {
-	for i, q := range *questions {
-		fmt.Printf("%v: %s\n", i+1, q.question)
-		answer := getUsersAnswer()
-		if answer != q.answer {
-			pScore.incrementIncorrect()
-			continue
-		}
-
-		pScore.incrementCorrect()
+	q := *questions
+	if len(q) == 0 {
+		return
 	}
-	return
+
+	x, q := q[0], q[1:]
+
+	fmt.Printf("%s\n", x.question)
+
+	answer := getUsersAnswer()
+	if answer != x.answer {
+		pScore.incrementIncorrect()
+	}
+
+	pScore.incrementCorrect()
+
+	askQuestions(&q, pScore)
 }
 
 func getUsersAnswer() int {
