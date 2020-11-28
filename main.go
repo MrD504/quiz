@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type question struct {
@@ -38,12 +39,19 @@ func (s *score) printScore() {
 }
 
 func main() {
+	start()
+}
+
+func start() {
 	questions, err := getQuestionsFromCSV("./problems.csv")
 	if err != nil {
 		panic(err)
 	}
 
 	playerScore := score{0, 0, len(*questions)}
+
+	fmt.Println("You have 30 seconds to answer all the questions starting from ... NOW!")
+	go startTimer(&playerScore)
 	askQuestions(questions, &playerScore)
 
 	playerScore.printScore()
@@ -130,4 +138,11 @@ func formatResponse(input string) (int, error) {
 	// convert CRLF to LF
 	text := strings.Replace(input, "\n", "", -1)
 	return strconv.Atoi(text)
+}
+
+func startTimer(score *score) {
+	time.Sleep(30 * time.Second)
+	fmt.Println("Times up!")
+	score.printScore()
+	os.Exit(0)
 }
