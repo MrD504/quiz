@@ -111,19 +111,22 @@ func askQuestions(questions *[]question, pScore *score) {
 	}
 
 	x, q := q[0], q[1:]
+	askQuestion(&x, pScore)
 
-	fmt.Printf("%s\n", x.question)
-
-	answer := getUsersAnswer()
-	if answer != x.answer {
-		pScore.incrementIncorrect()
-	}
-
-	pScore.incrementCorrect()
-
+	//recursion
 	askQuestions(&q, pScore)
 }
 
+func askQuestion(q *question, pScore *score) {
+	fmt.Printf("%s\n", q.question)
+
+	answer := getUsersAnswer()
+	if answer != q.answer {
+		pScore.incrementIncorrect()
+		return
+	}
+	pScore.incrementCorrect()
+}
 func getUsersAnswer() int {
 	reader := bufio.NewReader(os.Stdin)
 
