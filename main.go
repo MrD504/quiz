@@ -13,8 +13,8 @@ import (
 )
 
 type question struct {
-	question string
-	answer   int
+	ask    string
+	answer int
 }
 
 type score struct {
@@ -98,30 +98,30 @@ func parseCSV(input string) (*[]question, error) {
 			return nil, err
 		}
 
-		questions = append(questions, question{question: line[0], answer: ans})
+		questions = append(questions, question{ask: line[0], answer: ans})
 	}
 
 	return &questions, nil
 }
 
-func askQuestions(questions *[]question, pScore *score) {
-	q := *questions
-	if len(q) == 0 {
+func askQuestions(questionsPtr *[]question, pScore *score) {
+	questions := *questionsPtr
+	if len(questions) == 0 {
 		return
 	}
 
-	x, q := q[0], q[1:]
-	askQuestion(&x, pScore)
+	question, questions := questions[0], questions[1:]
+	askQuestion(&question, pScore)
 
 	//recursion
-	askQuestions(&q, pScore)
+	askQuestions(&questions, pScore)
 }
 
-func askQuestion(q *question, pScore *score) {
-	fmt.Printf("%s\n", q.question)
+func askQuestion(question *question, pScore *score) {
+	fmt.Printf("%s\n", question.ask)
 
 	answer := getUsersAnswer()
-	if answer != q.answer {
+	if answer != question.answer {
 		pScore.incrementIncorrect()
 		return
 	}
@@ -151,7 +151,9 @@ func formatResponse(input string) (int, error) {
 
 func startTimer(score *score) {
 	time.Sleep(30 * time.Second)
+
 	fmt.Println("Times up!")
 	score.printScore()
+
 	os.Exit(0)
 }
