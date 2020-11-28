@@ -16,3 +16,7 @@ Add a timer to increase the difficulty of the game
 ### Dependencies
 This program was written in and has only been tested in go1.14.2
 To make executable
+
+## Todo
+- Add timer to increase game difficulty
+- Add unit tests
