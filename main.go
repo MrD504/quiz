@@ -127,6 +127,7 @@ func askQuestion(question *question, pScore *score) {
 	}
 	pScore.incrementCorrect()
 }
+
 func getUsersAnswer() int {
 	reader := bufio.NewReader(os.Stdin)
 
