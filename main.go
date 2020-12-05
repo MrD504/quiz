@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/csv"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -39,19 +40,21 @@ func (s *score) printScore() {
 }
 
 func main() {
-	start()
+	filePath := flag.String("csv", "problems.csv", "Path to csv file in format question answer")
+	timer := flag.Int("timer", 30, "How long you want to do the quiz")
+	start(*filePath, *timer)
 }
 
-func start() {
-	questions, err := getQuestionsFromCSV("./problems.csv")
+func start(filePath string, timer int) {
+	questions, err := getQuestionsFromCSV("./" + filePath)
 	if err != nil {
 		panic(err)
 	}
 
 	playerScore := score{0, 0, len(*questions)}
 
-	fmt.Println("You have 30 seconds to answer all the questions starting from ... NOW!")
-	go startTimer(&playerScore)
+	fmt.Printf("You have %v seconds to answer all the questions starting from ... NOW!\n", timer)
+	go startTimer(timer, &playerScore)
 	askQuestions(questions, &playerScore)
 
 	playerScore.printScore()
@@ -150,8 +153,8 @@ func formatResponse(input string) (int, error) {
 	return strconv.Atoi(text)
 }
 
-func startTimer(score *score) {
-	time.Sleep(30 * time.Second)
+func startTimer(timer int, score *score) {
+	time.Sleep(time.Duration(timer) * time.Second)
 
 	fmt.Println("Times up!")
 	score.printScore()
