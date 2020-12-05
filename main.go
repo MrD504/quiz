@@ -42,6 +42,8 @@ func (s *score) printScore() {
 func main() {
 	filePath := flag.String("csv", "problems.csv", "Path to csv file in format question answer")
 	timer := flag.Int("timer", 30, "How long you want to do the quiz")
+	flag.Parse()
+
 	start(*filePath, *timer)
 }
 
